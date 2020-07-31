@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>六级考试报名</title>
+    <script src="/vue.js"></script>
+    <script src="/jquery-2.1.3.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <div style="text-align: center;">
+        <h1>四级考试报名</h1>
+    </div>
+
+    <!--表单统计-->
+    <el-form ref="form" :model="KaoShiInfo" label-width="80px">
+        <el-form-item label="我的姓名">
+            <el-input v-model="KaoShiInfo.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="KaoShiInfo.sex">
+                <el-radio label="男"></el-radio>
+                <el-radio label="女"></el-radio>
+            </el-radio-group>
+        </el-form-item>
+
+
+        <el-form-item label="院系">
+            <el-input v-model="KaoShiInfo.faculty"></el-input>
+        </el-form-item>
+        <el-form-item label="专业">
+            <el-input v-model="KaoShiInfo.profession"></el-input>
+        </el-form-item>
+        <el-form-item label="学号">
+            <el-input v-model="KaoShiInfo.stuid"></el-input>
+        </el-form-item>
+
+        <el-row>
+            <div style="text-align: center;">
+                <el-button
+                        type="success"
+                        icon="el-icon-check"
+                        @click="testUp">
+                    确认报名
+                </el-button>
+            </div>
+        </el-row>
+    </el-form>
+
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            KaoShiInfo:{}
+        },
+        methods:{
+            testUp (KaoShiInfo) {
+                $.ajax({
+                    url: "student/baomingcetsix",
+                    type: "post",
+                    data: JSON.stringify(app.KaoShiInfo),
+                    dataType: "json",
+                    contentType : "application/json",
+                    success : function(back) {
+                        alert(back.message);
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    });
+</script>
+</html>

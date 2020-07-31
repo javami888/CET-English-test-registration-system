@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>四六级修改界面</title>
+    <script src="/vue.js"></script>
+    <script src="/jquery-2.1.3.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1 align="center" >考试报名安排管理</h1>
+    <template>
+        <el-table
+                :data="allexatime"
+                style="width: 100%">
+            <el-table-column
+                    prop="id"
+                    label="考试类型编号"
+                    width="250">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="考试类目"
+                    width="250">
+            </el-table-column>
+            <el-table-column
+                    prop="starttime"
+                    label="开始报名时间"
+                    width="250">
+            </el-table-column>
+            <el-table-column
+                    prop="stoptime"
+                    label="结束报名时间"
+                    width="250">
+            </el-table-column>
+            <el-table-column
+                    label="操作">
+                <template slot-scope="scope">
+                    <el-button @click="updatePack(scope.row)" type="text" size="medium ">修改信息</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+    <!--修改考试时间-->
+    <el-dialog title="修改信息" :visible.sync="dialogFormVisibleUpdate">
+        <el-form :model="updateexatime">
+            <el-form-item label="考试类型编号" >
+                <el-input v-model="updateexatime.id" :disabled="true" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="考试类别" >
+                <el-input v-model="updateexatime.type" :disabled="true" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="开始报名时间" >
+                <el-col :span="11">
+                    <el-date-picker type="datetime" placeholder="选择时间" v-model="updateexatime.starttime" style="width: 100%;"></el-date-picker>
+                </el-col>
+            </el-form-item>
+            <el-form-item label="结束报名时间" >
+                <el-col :span="11">
+                    <el-date-picker type="datetime" placeholder="选择时间" v-model="updateexatime.stoptime" style="width: 100%;"></el-date-picker>
+                </el-col>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisibleUpdate = false">取 消</el-button>
+            <el-button type="primary" @click="toUpdateTime">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+<script>
+    $.ajax({
+        url:"exatime/selectTime",
+        dataType:"json",
+        type:"post",
+        data:{
+        },
+        success:function (data) {
+            app.allexatime=data.data;
+        }
+    });
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            allexatime:null,
+            updateexatime:{},
+            dialogFormVisibleUpdate:false
+        },
+        methods:{
+            updatePack:function (row) {
+                app.updateexatime=row;
+                app.dialogFormVisibleUpdate=true;
+            },
+            toUpdateTime:function () {
+                if(app.updateexatime != null) {
+                    $.ajax({
+                        url: "exatime/updatetime",
+                        data: JSON.stringify(app.updateexatime),
+                        dataType: "json",
+                        type: "post",
+                        contentType: "application/json",
+                        success: function (data) {
+                            if (data.code == 200) {
+                                app.$message({
+                                    showClose: true,
+                                    message: data.message,
+                                    type: 'success'
+                                })
+                                window.location.reload();
+                            } else {
+                                app.$message({
+                                    showClose: true,
+                                    message: data.message,
+                                    type: 'error'
+                                })
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message: '请输入修改的时间！'
+                    });
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

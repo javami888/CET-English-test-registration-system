@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>主页</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style type="text/css">
+#showimg {
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+}
+</style>
+
+
+</head>
+
+<body>
+	<div id="app">
+		<!-- Left Panel -->
+		<aside id="left-panel" class="left-panel">
+			<nav class="navbar navbar-expand-sm navbar-default">
+				<div id="main-menu" class="main-menu collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="iframe.html" target="mainFrame"><i
+								class="menu-icon fa fa-laptop"></i>公告 </a></li>
+						<li class="menu-title">主菜单</li>
+						<!-- /.menu-title -->
+						<li class="menu-item-has-children dropdown" v-for=" p in arr ">
+							<br>
+							<a :href="p.urlPath" class="dropdown-toggle" target="mainFrame">
+								<i class="menu-icon fa fa-cogs"></i>{{p.name}}
+						</a><br>
+						</li>
+
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</nav>
+
+		</aside>
+
+		<!-- /#left-panel -->
+		<!-- Right Panel -->
+		<div id="right-panel" class="right-panel">
+			<!-- Header-->
+			<header id="header" class="header">
+				<div class="top-left">
+					<div class="navbar-header">
+						<a class="navbar-brand" style="width: 150px" href="./">
+						<img src="images/siliuji.png" alt="Logo"></a>
+							<a class="navbar-brand hidden" href="./">
+								<img src="images/siliuji.png" alt="Logo">
+							</a> 
+							<a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+					</div>
+				</div>
+				<div class="top-right">
+					<div class="header-menu">
+						<div style="width: 60px; text-align: center; float:none">
+							<span style="width:40px; font-size: 15px">{{initinfo.name}}</span>
+							<button type="button" style="font-size: 12px"
+								class="btn btn-link active">{{initinfo.dname}}</button>
+						</div>
+						<div class="user-area dropdown float-right">
+							<a href="#" class="dropdown-toggle active" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false"> <img
+								class="user-avatar rounded-circle" :src="initinfo.portrait"
+								alt="User Avatar">
+							</a>
+
+							<div class="user-menu dropdown-menu">
+								<a class="nav-link" @click="showinfo()">
+								<i class="fa fa- user"></i>个人信息</a> 
+									<a class="nav-link" @click="logout()" href="#"><i class="fa fa-power -off"></i>退出登录</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</header>
+			<!-- /#header -->
+			<!-- Content -->
+			<div class="content">
+
+				<!-- Animated -->
+				<div class="animated fadeIn">
+					<!-- Widgets  -->
+					<iframe id="mainFrame" src="iframe.html" name="mainFrame"
+                            frameborder="0" height="800px" width="100%" frameBorder="0">
+					</iframe>
+
+					<!-- /#add-category -->
+				</div>
+				<!-- .animated -->
+			</div>
+			<!-- /.content -->
+			<div class="clearfix"></div>
+
+			<!-- /.site-footer -->
+		</div>
+		<!-- /#right-panel -->
+
+
+
+		<!-- 查看/修改个人信息模态框 -->
+		<div id="myModalinfo" tabindex="-1" role="dialog"
+			class="modal fade text-left" style="display: none;"
+			aria-hidden="true">
+			<div role="document" class="modal-dialog">
+				<div class="modal-content">
+					<!-- 模态框头部 -->
+					<div class="modal-header">
+						<span class="modal-title">个人信息</span>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body" style="text-align: center;">
+						<form id="Forminfo" name="Forminfo" enctype="multipart/form-data">
+							<div class="form-group" style="text-align: center;">
+								<img :src="info.portrait" id="showimg" width="200px" height="200px"><br/><br/>
+									<input type="file" accept="image/*" name="updateimg" id="updateimg" style="display:none;">
+<!--									<input type="button" class="btn btn-info" value="更换头像" onclick="document.Forminfo.updateimg.click()"> -->
+							</div>
+							
+							
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text">用户编号</span>
+								</div>
+								<input type="text" v-model="info.id" readonly="readonly"
+									class="form-control" placeholder="id" name="id">
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text">姓名</span>
+								</div>
+								<input type="text" v-model="info.name" readonly="readonly"
+									class="form-control" placeholder="name" name="name">
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text">电话</span>
+								</div>
+								<input type="text" v-model="info.telephone" class="form-control"
+									placeholder="telephone" name="telephone">
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text">注册时间</span>
+								</div>
+								<input type="text" v-model="info.hiredate" readonly="readonly"
+									class="form-control" placeholder="hiredate" name="hiredate">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" data-dismiss="modal"
+							class="btn btn-secondary">取消</button>
+						<button type="button" @click="updateinfo()"
+							id="updateImgbtn" data-dismiss="modal" class="btn btn-primary">确认修改</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+	</div>
+	<!-- #app -->
+
+
+
+</body>
+<script src="/jquery-2.1.3.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/plugins.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript">
+
+    // 收回菜单栏
+    jQuery(document).ready(function($) {
+
+		$('#menuToggle').on('click', function(event) {
+			var windowWidth = $(window).width();
+			if (windowWidth<1010) {
+				$('body').removeClass('open');
+				if (windowWidth<760){
+					$('#left-panel').slideToggle();
+				} else {
+					$('#left-panel').toggleClass('open-menu');
+				}
+			} else {
+				$('body').toggleClass('open');
+				$('#left-panel').removeClass('open-menu');
+			}
+
+		});
+
+		 //收回菜单栏
+		$(".menu-item-has-children.dropdown").each(function() {
+			$(this).on('click', function() {
+				var $temp_text = $(this).children('.dropdown-toggle').html();
+				$(this).children('.sub-menu').prepend('<li class="subtitle">' + $temp_text + '</li>');
+			});
+		});
+    })
+
+    	//获取权限列表
+		$.post("login/getPermission",function(back){
+	     	app.arr = back.data;
+	     });
+
+	  //获取员工信息：头像、姓名、职位
+	  $.get("login/showStaffInfo",function(back){
+			app.initinfo = back.data;
+	  })
+
+
+	var app = new Vue({
+		el : "#app",
+		data : {
+			arr : [],
+			info : {},
+			initinfo:{}
+		},
+		methods : {
+			logout () {
+				var res=window.confirm("是否退出当前账号？");
+				if(true == res){
+					$.post("login/logout", null, function(back) {
+
+						if (back.code == 200) {
+							window.top.location.href = "login.html";
+						}
+					});
+				}
+
+			},
+			//获取员工个人信息
+			showinfo () {
+				$("#myModalinfo").modal({
+					show : true
+				});
+				$.get("login/showinfo", function(back) {
+					app.info = back.data;
+					$("#myModalinfo").modal({
+						show : true
+					});
+				})
+			},
+			/*修改头像*/
+			updateinfo (id) {
+				var foo = new FormData(Forminfo);
+				$.ajax({
+					url: "login/updateInfo",
+					type: "post",
+					data: JSON.stringify(app.info),
+					dataType: "json",
+					processData : false,
+					contentType : "application/json",
+					success : function(back) {
+						alert(back.message);
+						window.location.reload();
+					}
+				});
+			}
+		}
+	});
+
+
+
+
+
+
+    </script>
+</html>

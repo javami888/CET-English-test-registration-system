@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/vue.js"></script>
+    <script src="/jquery-2.1.3.js"></script>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>个人中心</title>
+</head>
+<body>
+    <div id="app">
+        <div style="text-align: center;">
+            <h1>个人中心</h1>
+        </div>
+
+        <el-form ref="form" :model="formLabelAlign" label-width="80px">
+            <el-form-item label="我的姓名">
+                <el-input v-model="formLabelAlign.name"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+                <el-input v-model="formLabelAlign.sex" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="院系">
+                <el-input v-model="formLabelAlign.faculty"></el-input>
+            </el-form-item>
+            <el-form-item label="专业">
+                <el-input v-model="formLabelAlign.profession"></el-input>
+            </el-form-item>
+            <el-form-item label="学号">
+                <el-input v-model="formLabelAlign.stuid"></el-input>
+            </el-form-item>
+            <el-form-item label="四级成绩" >
+                <el-input v-model="formLabelAlign.fourresults" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="六级成绩">
+                <el-input v-model="formLabelAlign.sixresults" :disabled="true"></el-input>
+            </el-form-item>
+            <el-row>
+                <div style="text-align: center;">
+                    <el-button
+                            type="success"
+                            icon="el-icon-check"
+                            @click="updateInfo">
+                        修改信息
+                    </el-button>
+                </div>
+            </el-row>
+        </el-form>
+
+
+    </div>
+</body>
+<script>
+    //获取个人信息
+    $.post("student/selectStuinfo",function(back){
+        app.formLabelAlign = back.data;
+    });
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            formLabelAlign:{}
+        },
+        methods:{
+            updateInfo (formLabelAlign) {
+                $.ajax({
+                    url: "student/updateStuinfo",
+                    type: "post",
+                    data: JSON.stringify(app.formLabelAlign),
+                    dataType: "json",
+                    processData : false,
+                    contentType : "application/json",
+                    success : function(back) {
+                        alert(back.message);
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    });
+
+</script>
+</html>

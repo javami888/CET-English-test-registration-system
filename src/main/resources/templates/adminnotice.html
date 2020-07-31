@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公告管理</title>
+    <script src="/vue.js"></script>
+    <script src="/jquery-2.1.3.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1 align="center" >公告管理</h1>
+    <el-form ref="form" :model="allnotice" label-width="80px">
+        <el-form-item label="公告名称">
+            <el-input type="textarea" v-model="allnotice.name"></el-input>
+        </el-form-item>
+        <el-form-item label="公告内容">
+            <el-input type="textarea" v-model="allnotice.content"></el-input>
+        </el-form-item>
+        <el-button style="display:block;margin:0 auto;width: 300px" type="primary" size="200px" @click="updatenotice">点击修改</el-button>
+    </el-form>
+</div>
+<script>
+    $.ajax({
+        url:"notice/selectNotice",
+        dataType:"json",
+        type:"post",
+        data:{
+        },
+        success:function (back) {
+            app.allnotice=back.data;
+        }
+    });
+
+    var app = new Vue({
+        el:"#app",
+        data:{
+            allnotice:{}
+        },
+        methods:{
+            updatenotice:function () {
+                if(app.allnotice != null) {
+                    $.ajax({
+                        url: "notice/updateNotice",
+                        data: JSON.stringify(app.allnotice),
+                        dataType: "json",
+                        type: "post",
+                        contentType: "application/json",
+                        success: function (data) {
+                            if (data.code == 200) {
+                                app.$message({
+                                    showClose: true,
+                                    message: data.message,
+                                    type: 'success'
+                                })
+                                window.location.reload();
+                            } else {
+                                app.$message({
+                                    showClose: true,
+                                    message: data.message,
+                                    type: 'error'
+                                })
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message: '请输入要显示的公告！'
+                    });
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
